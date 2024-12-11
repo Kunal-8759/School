@@ -1,23 +1,27 @@
 'use strict';
 
+require('dotenv').config(); // Load environment variables from .env file
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
-const process = require('process');
 const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
 
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
+const { DB_USER, DB_PASSWORD, DB_NAME, DB_HOST, DB_PORT, DB_DIALECT } = require('../config/serverConfig');
 
-fs
-  .readdirSync(__dirname)
+
+
+// Initialize Sequelize
+let sequelize;
+sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
+  host: DB_HOST,
+  port: DB_PORT || 3306, // Default MySQL port is 3306
+  dialect: DB_DIALECT,
+  logging: false // Disable logging; you can enable it for debugging
+});
+
+// Dynamically load all model files
+fs.readdirSync(__dirname)
   .filter(file => {
     return (
       file.indexOf('.') !== 0 &&
@@ -31,12 +35,14 @@ fs
     db[model.name] = model;
   });
 
+// Set up model associations
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
 });
 
+// Export Sequelize instance and models
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 

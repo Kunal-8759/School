@@ -7,7 +7,14 @@ async function addSchool(schoolData){
 }
 
 async function getSchool(schoolData){
-    const response = await School.findOne(schoolData);
+    const response = await School.findOne({
+        where : {
+            name : schoolData.name,
+            address : schoolData.address,
+            latitude : schoolData.latitude,
+            longitude : schoolData.longitude
+        }
+    });
     return response;
 }
 
