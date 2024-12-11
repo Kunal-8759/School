@@ -42,8 +42,30 @@ function validateAddSchool(req,res,next){
     next();
 }
 
+function validategetAllSchool(req,res,next){
+    if(!req.query.lat){
+        
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            sucess:false,
+            message:"something went wrong while fetching School",
+            error:new AppError('latitude not found in the incoming request in the Correct Form',StatusCodes.BAD_REQUEST),
+            data:{}
+        })
+    }
+    if(!req.query.lon){
+        
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            sucess:false,
+            message:"something went wrong while fetching School",
+            error:new AppError('longitude not found in the incoming request in the Correct Form',StatusCodes.BAD_REQUEST),
+            data:{}
+        })
+    }
+    next();
+}
 
 
 module.exports={
-    validateAddSchool
+    validateAddSchool,
+    validategetAllSchool
 }

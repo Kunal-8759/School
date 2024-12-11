@@ -20,5 +20,27 @@ async function addSchool(req,res){
     }
 }
 
+async function getAllSchools(req,res){
+    try {
+        const response =await SchoolService.getAllSchools(req.query.lat,req.query.lon);
+        return res.status(StatusCodes.OK).json({
+            success:true,
+            message:"Schools fetched successfully",
+            data:response,
+            error:{}
+        });
+    }catch (error) {
+        return res.status(error.statusCode).json({
+            success:false,
+            message:error.message,
+            data:{},
+            error:error
+        });
+    }
+}
 
-module.exports = { addSchool };
+
+module.exports = { 
+    addSchool ,
+    getAllSchools
+};

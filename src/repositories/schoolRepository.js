@@ -11,7 +11,13 @@ async function getSchool(schoolData){
     return response;
 }
 
+async function getAllSchools(){
+    const response = await School.findAll();
+    return response;
+}
+
 module.exports ={
     addSchool,
-    getSchool
+    getSchool,
+    getAllSchools
 };

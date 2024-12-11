@@ -1,6 +1,7 @@
 const { StatusCodes } = require('http-status-codes');
 const SchoolRepository = require('../repositories/schoolRepository');
 const AppError = require('../utils/appError');
+const haversineDistance = require('../utils/haversineDistance');
 
 async function addSchool(schoolData){
     try{
@@ -22,6 +23,28 @@ async function addSchool(schoolData){
     
 }
 
+async function getAllSchools(userLat,userLon){
+    try {
+        const schools = await SchoolRepository.getAllSchools();
+        const schoolsWithDistance = schools.map((school) => {
+            const distance = haversineDistance(
+                userLat,
+                userLon,
+                school.latitude,
+                school.longitude
+            );
+            return { ...school.toJSON(), distance };
+        });
+        schoolsWithDistance.sort((a, b) => a.distance - b.distance);
+
+        return schoolsWithDistance;
+    } catch (error) {
+        throw new AppError("Something went wrong while adding School",StatusCodes.INTERNAL_SERVER_ERROR);
+
+    }
+}
+
 module.exports ={
-    addSchool
+    addSchool,
+    getAllSchools
 }
