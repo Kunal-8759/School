@@ -16,7 +16,7 @@ let sequelize;
 sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
   host: DB_HOST,
   port: DB_PORT || 3306, // Default MySQL port is 3306
-  dialect: DB_DIALECT,
+  dialect: DB_DIALECT || 'mysql', // This is the default dialect for MySQL
   logging: false // Disable logging; you can enable it for debugging
 });
 
