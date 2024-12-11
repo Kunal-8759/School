@@ -1,3 +1,4 @@
+const { where } = require('sequelize');
 const { School } = require('../models');
 
 async function addSchool(schoolData){
@@ -5,6 +6,12 @@ async function addSchool(schoolData){
     return response;
 }
 
+async function getSchool(schoolData){
+    const response = await School.findOne(schoolData);
+    return response;
+}
+
 module.exports ={
-    addSchool
+    addSchool,
+    getSchool
 };
